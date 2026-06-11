@@ -1,0 +1,423 @@
+-- ==============================================
+-- People Analytics & Employee Attrition Analysis
+-- ==============================================
+
+-- Dataset note:
+-- This analysis uses a fictional workforce dataset of 5,000 employee records
+-- created for portfolio demonstration purposes.
+
+-- Preview data
+
+SELECT *
+FROM employees
+LIMIT 10;
+
+
+-- Query 1. Which departments experience the highest attrition?
+
+SELECT
+    "Department",
+    COUNT(*) AS total_employees,
+    SUM(CASE WHEN "Attrition Status" = 'Yes' THEN 1 ELSE 0 END) AS employees_left,
+    ROUND(
+        SUM(CASE WHEN "Attrition Status" = 'Yes' THEN 1 ELSE 0 END) * 100.0
+        / COUNT(*),
+        2
+    ) AS attrition_rate_pct
+FROM employees
+GROUP BY "Department"
+ORDER BY attrition_rate_pct DESC;
+
+-- Findings:
+-- Restaurant Operations (33.07%), Guest Services (32.79%), and Food & Beverage (30.10%) 
+-- experienced the highest attrition rates, indicating elevated turnover within 
+-- guest-facing operational departments. These roles may face greater retention challenges
+-- due to demanding service environments, variable schedules, and frequent guest 
+-- interaction.
+
+-- Finance (14.12%), Training (17.28%), and Systems Support (19.44%) reported the lowest 
+-- attrition rates, suggesting greater workforce stability and employee retention within 
+-- administrative and support functions.
+
+-- The gap between the highest and lowest attrition rates was nearly 19 percentage points
+-- (33.07% vs. 14.12%), demonstrating substantial variation in turnover across departments
+-- and highlighting opportunities for targeted retention strategies.
+
+-- Recommendation:
+-- Leadership should prioritize retention initiatives within Restaurant Operations, Guest
+-- Services, and Food & Beverage by evaluating scheduling practices, career development 
+-- opportunities, onboarding effectiveness, and employee engagement levels.
+
+
+-- Query 2. Which business units experience the highest attrition?
+
+SELECT
+    "Business Unit",
+    COUNT(*) AS total_employees,
+    SUM(CASE WHEN "Attrition Status" = 'Yes' THEN 1 ELSE 0 END) AS employees_left,
+    ROUND(
+        SUM(CASE WHEN "Attrition Status" = 'Yes' THEN 1 ELSE 0 END) * 100.0
+        / COUNT(*),
+        2
+    ) AS attrition_rate_pct
+FROM employees
+GROUP BY "Business Unit"
+ORDER BY attrition_rate_pct DESC;
+
+-- Findings: 
+-- Food & Beverage experienced the highest attrition rate at 30.92%, followed closely by 
+-- Parks & Resorts at 29.65%. Both business units are highly guest-facing and operationally
+-- intensive, which may contribute to elevated turnover levels.
+
+-- Sales & Marketing (26.20%) and Hotels & Lodging (25.80%) reported moderate attrition
+-- rates, indicating retention challenges that are less severe than those observed in 
+-- frontline operational business units.
+
+-- Finance & Accounting reported the lowest attrition rate at 20.12%, followed by Corporate
+-- Services (20.26%) and Technology (22.62%), suggesting greater workforce stability in
+-- administrative and technical functions.
+
+-- Attrition rates varied by more than 10 percentage points across business units (30.92%
+-- vs. 20.12%), demonstrating meaningful differences in employee retention across the 
+-- organization.
+
+-- Recommendation:
+-- Retention efforts should be prioritized within Food & Beverage and Parks & Resorts, 
+-- where turnover is highest. Leadership should evaluate employee engagement, scheduling 
+-- flexibility, career development opportunities, and manager effectiveness to address 
+-- turnover drivers in these business units.
+
+
+-- Query 3. How does engagement relate to attrition?
+
+SELECT
+	"Attrition Status",
+    COUNT(*) AS employee_count,
+    ROUND(AVG("Engagement Score"), 2) AS avg_engagement_score
+FROM employees
+GROUP BY "Attrition Status";
+
+-- Findings:
+-- Employees who left the organization reported an average engagement score of 6.56, 
+-- compared to 7.15 for employees who remained. This 0.59-point gap suggests that lower 
+-- engagement is associated with a greater likelihood of attrition.
+
+-- While employees who left were not necessarily disengaged, the consistent gap in 
+-- engagement scores indicates that engagement may be an important contributor to employee
+-- retention and workforce stability.
+
+-- Recommendation:
+-- Leadership should monitor engagement levels proactively and implement initiatives 
+-- focused on employee development, recognition, manager effectiveness, and career growth
+-- opportunities. Improving engagement may help reduce turnover and strengthen long-term 
+-- retention.
+
+
+-- Query 4. How does satisfaction relate to attrition?
+
+SELECT
+	"Attrition Status",
+    COUNT(*) AS employee_count,
+    ROUND(AVG("Satisfaction Score"), 2) AS avg_satisfaction_score
+FROM employees
+GROUP BY "Attrition Status";
+
+-- Findings: 
+-- Employees who remained with the organization reported an average satisfaction score of 
+-- 7.30, while employees who left reported an average satisfaction score of 6.63. Departing
+-- employees reported satisfaction scores that were 0.67 points lower than retained 
+-- employees, suggesting that employee satisfaction is associated with workforce retention.
+
+-- The satisfaction gap (0.67 points) was slightly larger than the engagement gap 
+-- identified in Query 3 (0.59 points), indicating that satisfaction may be a stronger 
+-- indicator of attrition within this workforce.
+
+-- Recommendation:
+-- Leadership should focus on initiatives that improve employee satisfaction, including 
+-- career development opportunities, recognition programs, workload management, and manager
+-- support. Monitoring satisfaction trends may help identify retention risks before 
+-- employees leave the organization.
+
+
+-- Query 5. Which tenure groups are most likely to leave?
+
+SELECT
+    CASE
+        WHEN "Tenure Years" < 1 THEN 'Less than 1 Year'
+        WHEN "Tenure Years" < 3 THEN '1-3 Years'
+        WHEN "Tenure Years" < 5 THEN '3-5 Years'
+        WHEN "Tenure Years" < 10 THEN '5-10 Years'
+        ELSE '10+ Years'
+    END AS tenure_group,
+    
+    COUNT(*) AS total_employees,
+    
+    SUM(CASE WHEN "Attrition Status" = 'Yes' THEN 1 ELSE 0 END) AS employees_left,
+    
+    ROUND(
+        SUM(CASE WHEN "Attrition Status" = 'Yes' THEN 1 ELSE 0 END) * 100.0
+        / COUNT(*),
+        2
+    ) AS attrition_rate_pct
+
+FROM employees
+
+GROUP BY tenure_group
+
+ORDER BY
+    CASE
+        WHEN tenure_group = 'Less than 1 Year' THEN 1
+        WHEN tenure_group = '1-3 Years' THEN 2
+        WHEN tenure_group = '3-5 Years' THEN 3
+        WHEN tenure_group = '5-10 Years' THEN 4
+        ELSE 5
+    END;
+
+-- Findings: 
+-- Employees with less than one year of tenure experienced the highest attrition rate at 
+-- 35.48%, indicating that turnover is most concentrated among newly hired employees.
+
+-- Employees with 1–3 years of tenure reported the second-highest attrition rate at 30.46%,
+-- suggesting that retention challenges extend beyond the onboarding period and into the 
+-- early stages of employment.
+
+-- Employees with more than 10 years of tenure reported the lowest attrition rate at 
+-- 22.11%, indicating greater workforce stability among long-tenured employees.
+
+-- While attrition generally declined as tenure increased, employees with 5–10 years of 
+-- tenure (24.69%) experienced slightly higher turnover than employees with 3–5 years of 
+-- tenure (22.83%). This suggests that attrition does not decrease uniformly across tenure
+-- groups and may indicate some mid-career turnover risk, although early-tenure employees
+-- remain the highest-risk group overall.
+
+-- The difference between the highest and lowest attrition rates exceeded 13 percentage 
+-- points (35.48% vs. 22.11%), highlighting the importance of retaining employees during 
+-- their first few years with the organization.
+
+-- Recommendation:
+-- Leadership should focus retention efforts on employees during their first three years of
+-- employment by strengthening onboarding programs, career development pathways, mentorship
+-- opportunities, and manager support. Additionally, organizations may benefit from 
+-- evaluating career progression and advancement opportunities for mid-career employees to
+-- address potential turnover risks among more experienced staff.
+
+
+-- Query 6. What are the most common reasons employees leave?
+
+SELECT
+    "Reason for Leaving",
+    COUNT(*) AS employees_left,
+    ROUND(
+        COUNT(*) * 100.0 /
+        (
+            SELECT COUNT(*)
+            FROM employees
+            WHERE "Attrition Status" = 'Yes'
+        ),
+        2
+    ) AS percentage_of_attrition
+FROM employees
+WHERE "Attrition Status" = 'Yes'
+GROUP BY "Reason for Leaving"
+ORDER BY employees_left DESC;
+
+-- Findings: 
+-- Seasonal End was the most common reason employees left the organization, accounting for
+-- 14.02% of all departures. This suggests that a meaningful portion of turnover may be 
+-- driven by temporary or seasonal employment arrangements rather than retention-related
+-- issues.
+
+-- Management (10.88%), Career Growth (10.42%), and Role Fit (10.11%) were the leading 
+-- non-seasonal drivers of attrition. These findings indicate that leadership 
+-- effectiveness, advancement opportunities, and job alignment may influence employee 
+-- retention.
+
+-- Work-Life Balance (9.89%) and Relocation (9.89%) also contributed significantly to 
+-- turnover, highlighting the impact of both personal and workplace factors on employee 
+-- retention decisions.
+
+-- Compensation accounted for 8.74% of departures, suggesting that while pay influences 
+-- turnover, other factors such as management quality, career development, and role 
+-- satisfaction may play a larger role within this workforce.
+
+-- The top five reasons for attrition (Seasonal End, Management, Career Growth, Role Fit,
+-- and Work-Life Balance) collectively accounted for approximately 55.32% of all employee
+-- departures, indicating that retention initiatives focused on these areas could have 
+-- the greatest organizational impact.
+
+-- Recommendation:
+-- Leadership should prioritize retention strategies focused on manager development, 
+-- career progression opportunities, employee-job alignment, and work-life balance 
+-- initiatives. Additionally, organizations with seasonal workforce segments should 
+-- evaluate opportunities to transition high-performing seasonal employees into permanent
+-- roles where feasible.
+
+
+-- Query 7. Voluntary vs Involuntary Separation
+
+SELECT
+    "Separation Type",
+    COUNT(*) AS employees_left,
+    ROUND(
+        COUNT(*) * 100.0 /
+        (
+            SELECT COUNT(*)
+            FROM employees
+            WHERE "Attrition Status" = 'Yes'
+        ),
+        2
+    ) AS percentage_of_attrition
+FROM employees
+WHERE "Attrition Status" = 'Yes'
+GROUP BY "Separation Type"
+ORDER BY employees_left DESC;
+
+-- Findings: 
+-- Voluntary separations accounted for 59.39% of all employee departures, making them the
+-- primary contributor to overall attrition.
+
+-- Involuntary separations represented 40.61% of departures, indicating that while 
+-- organizational actions contributed to turnover, the majority of attrition resulted from
+-- employee decisions to leave.
+
+-- The gap between voluntary and involuntary separations suggests that employee retention
+-- initiatives may have a meaningful impact on reducing overall turnover.
+
+-- Since nearly three out of every five departures were voluntary, factors such as career
+-- growth opportunities, management effectiveness, work-life balance, and employee 
+-- satisfaction may play an important role in workforce retention.
+
+-- Recommendation:
+-- Leadership should prioritize strategies aimed at reducing voluntary turnover by 
+-- improving employee engagement, strengthening career development pathways, enhancing 
+-- manager effectiveness, and regularly monitoring employee satisfaction. Addressing the 
+-- primary drivers of voluntary attrition may help improve long-term workforce stability.
+
+
+-- Query 8. Attrition trend over time
+
+SELECT
+    strftime('%Y-%m', "Termination Date") AS month,
+    COUNT(*) AS employees_left,
+    SUM(COUNT(*)) OVER (
+        ORDER BY strftime('%Y-%m', "Termination Date")
+    ) AS cumulative_attrition
+FROM employees
+WHERE "Attrition Status" = 'Yes'
+  AND "Termination Date" IS NOT NULL
+  AND "Termination Date" < '2026-01-01'
+GROUP BY month
+ORDER BY month;
+
+-- Findings: 
+-- Employee attrition increased substantially over the analysis period, rising from fewer 
+-- than 10 monthly departures during the early years of the dataset to more than 50 monthly 
+-- departures in several months of 2025.
+
+-- The highest level of attrition occurred in December 2025, when 73 employees left the 
+-- organization. This represented the largest monthly departure count observed during the 
+-- analysis period.
+
+-- Elevated turnover was observed throughout the second half of 2025, with monthly 
+-- departures consistently exceeding 40 employees from July through November and reaching a 
+-- peak in December.
+
+-- Attrition remained relatively low during 2015–2018 before increasing steadily in later
+-- years, suggesting that turnover pressures grew as the workforce expanded over time.
+
+-- The cumulative attrition count reached 1,300 employee departures by the end of December -- 2025, demonstrating the long-term impact of workforce turnover on organizational 
+-- staffing levels.
+
+-- Recommendation:
+-- Leadership should investigate the drivers behind the sustained increase in attrition 
+-- during 2024–2025, particularly within departments and business units previously 
+-- identified as high-turnover areas. Monitoring workforce growth, employee engagement, 
+-- satisfaction levels, and retention program effectiveness may help address rising 
+-- turnover trends.
+
+
+-- Query 9. Attrition by work arrangement
+
+SELECT
+    "Work Arrangement",
+    COUNT(*) AS total_employees,
+    SUM(CASE WHEN "Attrition Status" = 'Yes' THEN 1 ELSE 0 END) AS employees_left,
+    ROUND(
+        SUM(CASE WHEN "Attrition Status" = 'Yes' THEN 1 ELSE 0 END) * 100.0
+        / COUNT(*),
+        2
+    ) AS attrition_rate_pct
+FROM employees
+GROUP BY "Work Arrangement"
+ORDER BY attrition_rate_pct DESC;
+
+-- Findings: 
+-- Employees working in onsite roles experienced the highest attrition rate at 28.55%, 
+-- indicating greater turnover among employees required to work fully in person.
+
+-- Employees in hybrid arrangements reported a lower attrition rate of 24.32%, suggesting 
+-- that workplace flexibility may contribute to improved employee retention.
+
+-- Remote employees experienced the lowest attrition rate at 19.33%, demonstrating the 
+-- strongest retention outcomes among the three work arrangements.
+
+-- The difference between onsite and remote attrition rates was 9.22 percentage points 
+-- (28.55% vs. 19.33%), highlighting a meaningful relationship between work arrangement and 
+-- employee retention.
+
+-- Recommendation:
+-- Leadership should evaluate opportunities to expand workplace flexibility where 
+-- operationally feasible. The lower attrition rates observed among hybrid and remote 
+-- employees suggest that flexible work arrangements may contribute to improved retention, 
+-- employee satisfaction, and workforce stability.
+
+
+-- Query 10. Managers with the highest attrition rates
+
+SELECT
+    "Manager Name",
+    COUNT(*) AS total_employees,
+    SUM(CASE WHEN "Attrition Status" = 'Yes' THEN 1 ELSE 0 END) AS employees_left,
+    ROUND(
+        SUM(CASE WHEN "Attrition Status" = 'Yes' THEN 1 ELSE 0 END) * 100.0
+        / COUNT(*),
+        2
+    ) AS attrition_rate_pct
+FROM employees
+GROUP BY "Manager Name"
+HAVING COUNT(*) >= 50
+ORDER BY attrition_rate_pct DESC
+LIMIT 10;
+
+-- Findings:
+-- Sebastian Mitchell's team experienced the highest attrition rate at 39.62%, followed by 
+-- Mason Lopez (38.60%) and Nathan Rodriguez (36.84%). All three managers reported 
+-- attrition rates significantly above the organizational average.
+
+-- The top ten managers by attrition rate all exceeded 31% turnover, indicating meaningful 
+-- differences in employee retention outcomes across leadership teams.
+
+-- Several managers with similarly sized teams experienced substantially different turnover 
+-- outcomes, suggesting that factors beyond team size may be influencing employee retention.
+
+-- Since management-related concerns were previously identified as one of the leading 
+-- reasons employees left the organization, the elevated attrition rates observed within 
+-- certain teams may warrant further investigation into leadership practices, employee 
+-- engagement, and career development support.
+
+-- Recommendation:
+-- Leadership should conduct deeper analysis of teams experiencing elevated turnover to 
+-- identify potential drivers related to management effectiveness, employee engagement, 
+-- workload distribution, career development opportunities, and workplace culture. Sharing 
+-- best practices from lower-turnover teams may help improve retention outcomes across the 
+-- organization.
+
+
+-- Conclusion:
+-- Attrition was highest among guest-facing departments, early-tenure employees, onsite 
+-- workers, and teams led by certain managers. Employees who left reported lower engagement 
+-- and satisfaction scores than those who remained, while career growth and 
+-- management-related concerns emerged as leading drivers of turnover. Together, these 
+-- findings suggest that retention efforts focused on leadership development, employee 
+-- experience, career progression, and workplace flexibility may help improve workforce 
+-- stability.
