@@ -3,7 +3,9 @@
 
 This project explores employee attrition and workforce retention trends using a fictional dataset of 5,000 employee records. SQL was used to analyze turnover patterns across departments, business units, tenure groups, work arrangements, employee engagement, satisfaction, separation types, and manager-level performance. Findings were visualized in an interactive Tableau dashboard designed to support data-driven workforce planning and retention strategies.
 
-Disclaimer: All resort names, guest interactions, operational metrics, and business scenarios are fictional and were created for educational and portfolio purposes only.
+## Disclaimer
+
+This project was created for portfolio and educational purposes using a fictional workforce dataset. All employee records, departments, business units, managers, and attrition events are simulated and do not represent any real organization or individuals.
 
 ### Tools Used
 - SQL (SQLite)
