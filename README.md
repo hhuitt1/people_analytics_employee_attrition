@@ -42,8 +42,32 @@ This project was created for portfolio and educational purposes using a fictiona
 
 - Attrition rates varied considerably across managers, with the highest-turnover teams exceeding 39%, suggesting leadership and employee experience may influence retention outcomes.
 
-### Recommendations
-- 
+### Executive Summary
+
+Attrition was highest among guest-facing departments, first-year employees, and onsite workers. Employees who left reported lower engagement and satisfaction scores than those who remained, while seasonal employment cycles and voluntary separations accounted for a significant portion of workforce turnover. Together, these findings suggest opportunities to improve retention through workforce planning, employee experience initiatives, workplace flexibility, leadership development, and early-tenure support programs.
+
+## Recommendations
+
+### 1. Strengthen First-Year Employee Retention
+Employees with less than one year of tenure experienced the highest attrition rate (35.48%). Implementing structured onboarding, mentorship programs, and early-career development initiatives may help improve retention during the highest-risk employment period.
+
+### 2. Focus Retention Efforts on Guest-Facing Departments
+Restaurant Operations, Guest Services, and Food & Beverage reported the highest turnover rates. Targeted retention strategies, workload assessments, career development opportunities, and employee recognition programs may help reduce turnover within these operational areas.
+
+### 3. Improve Employee Engagement and Satisfaction
+Employees who left the organization reported lower engagement and satisfaction scores than employees who remained. Regular employee feedback programs, engagement surveys, and action plans focused on workplace experience may help strengthen retention outcomes.
+
+### 4. Evaluate Workplace Flexibility Opportunities
+Remote and hybrid employees experienced lower attrition rates than onsite employees. Expanding flexible work arrangements where operationally feasible may support workforce stability and employee satisfaction.
+
+### 5. Monitor Seasonal Workforce Planning
+Seasonal End was the most common reason for employee departures, indicating workforce seasonality significantly impacts turnover metrics. Improving workforce forecasting and developing pathways for seasonal employees to transition into permanent roles may help reduce turnover.
+
+### 6. Investigate High-Turnover Teams
+Several managers experienced attrition rates substantially above the organizational average. Additional analysis of leadership practices, team engagement, workload distribution, and career development opportunities may help identify factors contributing to elevated turnover.
+
+### 7. Establish Ongoing Attrition Monitoring
+Implementing regular workforce dashboards and retention reporting can help leadership proactively identify emerging turnover trends, measure retention program effectiveness, and support data-driven workforce planning decisions.
 
 ### Tableau Dashboard
 
